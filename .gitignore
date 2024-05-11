@@ -49,3 +49,6 @@ wp-config.php
 
 #development tool
 .idea/
+
+#node_modules
+/wp-content/plugins/*/node_modules/
