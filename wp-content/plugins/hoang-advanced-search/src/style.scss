@@ -1,5 +1,5 @@
 .itc-search-container {
-  min-width: 50%;
+  min-width: 55%;
   border: 1px solid #c4c4c4;
   border-radius: 3px;
   padding: 20px;
@@ -29,7 +29,8 @@
 }
 
 label {
-  font-size:10px
+  color: black;
+  font-size: 11px;
 }
 
 h3, h4 {
@@ -57,3 +58,23 @@ h3, h4 {
 
 .search-pagination a:hover{cursor: pointer}
 .search-pagination a:hover:not(.active) {background-color: #ddd;}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#btn-submit{
+  background-color: #119fe3;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

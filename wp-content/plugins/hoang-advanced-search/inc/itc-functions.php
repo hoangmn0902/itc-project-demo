@@ -25,6 +25,10 @@ function itc_search_ajax() {
     }
 	$post  = wp_unslash( $_POST );
 
+    if (isset($post['tags']) && !empty($post['tags'])){
+	    $post['tags'] = explode(",",$post['tags']);
+    }
+
 	$args = itc_generate_search_param($post);
 
 	//display search result
@@ -96,6 +100,9 @@ function itc_display_search_result( array $args): void{
                         <a href="<?php the_permalink(); ?>">
 							<?php the_post_thumbnail(); // Change 'medium' to desired image size ?>
                         </a>
+                    <?php else:?>
+                        <?php $image_url = ITC_PLUGIN_ADV_SEARCH_URI . '/assets/no-image.jpg'; ?>
+                        <img width="64" height="64" src="<?php echo esc_url($image_url)?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" decoding="async" loading="lazy">
 					<?php endif; ?>
                 </div>
                 <div class="post-content">

@@ -24,7 +24,6 @@ jQuery(document).ready(function ($) {
     const inputKeyword   = $("input[name=q]");
     const selectCategory = $("#cat");
     const checkboxTags = $("input[type=checkbox][name='tags\[\]']");
-    const aPaged = $(".search-pagination a");
     const formSearch = $("#itc-search-form");
 
     let formData = new FormData();
@@ -42,29 +41,10 @@ jQuery(document).ready(function ($) {
 
     });
 
-    aPaged.each(function (){
-        let totalPage = aPaged.length - 2;
-        console.log(formData.get('paged')) ;
+    //call function pagination handler when page loaded
+    paginationHandler();
 
-        $(this).on('click', function () {
-            let currentPage = parseFloat(formData.get('paged'));
-             if ( $(this).text().toLowerCase() == 'previous'){
-                 currentPage -= 1;
-                 currentPage = Math.max(1, currentPage);
-             }else if($(this).text().toLowerCase() == 'next'){
-                 currentPage += 1;
-                 currentPage = Math.min(currentPage, totalPage);
-             }else {
-                 currentPage = parseFloat($(this).text());
-             }
-
-            formData.set('paged', currentPage);
-            console.log(formData.get('paged')) ;
-            formSearch.submit();
-        });
-    });
-
-
+    //handle submit form with ajax
     formSearch.submit(function(event) {
         event.preventDefault();
 
@@ -82,7 +62,6 @@ jQuery(document).ready(function ($) {
         formData.set( 'cat', selectCategory.val() );
         formData.set( 'tags', checkboxValues);
 
-
         let ajaxUrl = itc_search.ajaxUrl;
 
         // AJAX request
@@ -97,6 +76,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 $('.container-result').html(response);
+                paginationHandler();
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log( 'The following error occured: ' + textStatus, errorThrown );
@@ -104,13 +84,35 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    // Function to handling for pagination
+    function paginationHandler(){
+        const aPaged = $(".search-pagination a");
+        let totalPage = aPaged.length - 2;
+
+        aPaged.on('click', function (){
+            let currentPage = parseFloat(formData.get('paged'));
+            if ( $(this).text().toLowerCase() == 'previous'){
+                currentPage -= 1;
+                currentPage = Math.max(1, currentPage);
+            }else if($(this).text().toLowerCase() == 'next'){
+                currentPage += 1;
+                currentPage = Math.min(currentPage, totalPage);
+            }else {
+                currentPage = parseFloat($(this).text());
+            }
+
+            formData.set('paged', currentPage);
+            console.log(formData.get('paged')) ;
+            formSearch.submit();
+
+        });
+    }
 
     // Function to update search parameters in the URL
     function updateURLParams() {
         var queryParams = $('#itc-search-form').serialize(); // Serialize form data
         queryParams = queryParams.replaceAll('%5B','[');
         queryParams = queryParams.replaceAll('%5D',']');
-
         history.pushState(null, '', '?' + queryParams); // Update URL
     }
 
