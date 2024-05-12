@@ -19,6 +19,14 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 
 /**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * Those files can contain any CSS code that gets applied to the editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+import './editor.scss';
+
+/**
  * Imports the necessary components that will be used to create
  * the user interface for the block's settings.
  *
@@ -48,60 +56,14 @@ import { useEffect } from 'react';
  *
  * @return {Element} Element to render.
  */
-export default function Edit( { attributes, setAttributes } ) {
-	const { fallbackCurrentYear, showStartingYear, startingYear } = attributes;
 
-	// Get the current year and make sure it's a string.
-	const currentYear = new Date().getFullYear().toString();
-
-	// When the block loads, set the fallbackCurrentYear attribute to the
-	// current year if it's not already set.
-	useEffect( () => {
-		if ( currentYear !== fallbackCurrentYear ) {
-			setAttributes( { fallbackCurrentYear: currentYear } );
-		}
-	}, [ currentYear, fallbackCurrentYear, setAttributes ] );
-
-	let displayDate;
-
-	// Display the starting year as well if supplied by the user.
-	if ( showStartingYear && startingYear ) {
-		displayDate = startingYear + '–' + currentYear;
-	} else {
-		displayDate = currentYear;
-	}
-
+export default function Edit() {
 	return (
-		<>
-			<InspectorControls>
-				<PanelBody title={ __( 'Settings', 'hoang-advanced-search' ) }>
-					<ToggleControl
-						checked={ showStartingYear }
-						label={ __(
-							'Show starting year',
-							'hoang-advanced-search'
-						) }
-						onChange={ () =>
-							setAttributes( {
-								showStartingYear: ! showStartingYear,
-							} )
-						}
-					/>
-					{ showStartingYear && (
-						<TextControl
-							label={ __(
-								'Starting year',
-								'hoang-advanced-search'
-							) }
-							value={ startingYear }
-							onChange={ ( value ) =>
-								setAttributes( { startingYear: value } )
-							}
-						/>
-					) }
-				</PanelBody>
-			</InspectorControls>
-			<p { ...useBlockProps() }>© { displayDate }</p>
-		</>
+		<p { ...useBlockProps() }>
+			{ __(
+				'Advanced search form',
+				'hoang-advanced-search'
+			) }
+		</p>
 	);
 }

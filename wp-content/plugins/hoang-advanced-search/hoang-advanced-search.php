@@ -17,6 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+define( 'ITC_PLUGIN_ADV_SEARCH_URI', plugin_dir_url( __FILE__ ));
+define( 'ITC_PLUGIN_ADV_SEARCH_PATH', plugin_dir_path( __FILE__ ));
+
+require_once (ITC_PLUGIN_ADV_SEARCH_PATH.'/inc/itc-functions.php');
+
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
  * Behind the scenes, it registers also all assets so they can be enqueued

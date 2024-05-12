@@ -10,24 +10,67 @@
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
 
-// Get the current year.
-$current_year = date( "Y" );
+require_once (ITC_PLUGIN_ADV_SEARCH_PATH.'/inc/itc-functions.php');
 
-// Determine which content to display.
-if ( isset( $attributes['fallbackCurrentYear'] ) && $attributes['fallbackCurrentYear'] === $current_year ) {
-
-	// The current year is the same as the fallback, so use the block content saved in the database (by the save.js function).
-	$block_content = $content;
-} else {
-
-	// The current year is different from the fallback, so render the updated block content.
-	if ( ! empty( $attributes['startingYear'] ) && ! empty( $attributes['showStartingYear'] ) ) {
-		$display_date = $attributes['startingYear'] . '–' . $current_year;
-	} else {
-		$display_date = $current_year;
-	}
-
-	$block_content = '<p ' . get_block_wrapper_attributes() . '>© ' . esc_html( $display_date ) . '</p>';
+//enqueue jQuery
+if ( ! wp_script_is( 'jquery', 'enqueued' ) ) {
+	wp_enqueue_script( 'jquery');
 }
 
-echo wp_kses_post( $block_content );
+$get = wp_unslash($_GET);
+?>
+
+<div class="itc-search-container">
+    <form id="itc-search-form">
+        <div class="container-top">
+            <div>
+                <label for="fname">Keyword</label><br>
+                <input type="text" name="q" id="q" size="30" value="<?php echo $get['q'] ?? null;   ?>">
+            </div>
+            <div>
+                <label for="fname">Category</label><br>
+                <select id="cat" name="cat">
+				    <?php
+				    $categories = get_categories();
+
+				    if ( $categories ) {
+					    foreach ( $categories as $category ) {
+						    $selected = (isset($get['cat']) && $get['cat'] == $category->term_id)? 'selected' : null;
+						    echo "<option value='$category->term_id' $selected>$category->name</option>";
+					    }
+				    }
+				    ?>
+                </select>
+            </div>
+            <div style="align-content: end;">
+                <button id="btn-submit" type="submit">Search</button>
+            </div>
+        </div>
+
+        <!--    show tags-->
+        <div class="container-tag">
+		    <?php
+		    $tags = get_tags();
+		    if ( $tags ) {
+			    foreach ( $tags as $tag ) {
+				    $checked = (isset($get['tags']) && in_array($tag->term_id, $get['tags']))? 'checked' : null;
+				    ?>
+                    <input type="checkbox" id="checkbox-<?php echo $tag->term_id; ?>" name="tags[]" value="<?php echo $tag->term_id; ?>" <?php echo $checked?>>
+                    <label for="checkbox-<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></label>
+				    <?php
+			    }
+		    }
+		    ?>
+        </div>
+    </form>
+
+    <!--    show search result-->
+    <div class="container-result">
+        <?php
+            $get = wp_unslash($_GET);
+            itc_search_by_param($get);
+        ?>
+    </div>
+
+
+</div>
