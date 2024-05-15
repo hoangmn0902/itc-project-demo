@@ -36,6 +36,7 @@ function itc_search_ajax() {
 	exit();
 }
 add_action('wp_ajax_itc_search_ajax','itc_search_ajax');
+add_action('wp_ajax_nopriv_itc_search_ajax','itc_search_ajax');
 
 /**
  * generate_search_param
