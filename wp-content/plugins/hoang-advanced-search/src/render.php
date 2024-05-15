@@ -25,7 +25,7 @@ $get = wp_unslash($_GET);
         <div class="container-top">
             <div>
                 <label for="fname">Keyword</label><br>
-                <input type="text" name="q" id="q" size="30" value="<?php echo $get['q'] ?? null;   ?>">
+                <input type="text" name="q" id="q" size="30" value="<?php echo esc_attr($get['q']) ?? null;?>">
             </div>
             <div>
                 <label for="fname">Category</label><br>
